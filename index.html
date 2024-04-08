@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Node.js Quiz</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .question {
+            border: 1px solid #ddd; 
+            margin-bottom: 20px; 
+            padding: 15px;
+        }
+
+        ul { 
+            list-style: none; 
+            padding: 0; 
+        }
+
+        #results { 
+            margin-top: 25px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Node.js Quiz</h1>
+    <div id="questions"></div>
+    <button id="submit">Submit Answers</button>
+    <div id="results"></div>
+
+    <script>
+        const questionsContainer = document.getElementById('questions');
+        const submitButton = document.getElementById('submit');
+        const resultsContainer = document.getElementById('results');
+
+        fetch('/questions')
+            .then(res => res.json())
+            .then(questions => displayQuestions(questions));
+
+        function displayQuestions(questions) {
+            questionsContainer.innerHTML = ''; // Reset questions
+
+            questions.forEach(question => {
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question');
+
+                questionElement.innerHTML = `
+                    <h3>${question.text}</h3>
+                    <ul>
+                        ${question.options.map((option, index) => `
+                            <li>
+                                <input type="radio" name="question-${question.id}-option${index}" id="q${question.id}-option${index}" value="${index}">
+
+                                <label for="q${question.id}-option${index}">${option}</label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+
+        submitButton.addEventListener('click', () => {
+            const selectedAnswers = getSelectedAnswers();
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ answers: selectedAnswers })
+            })
+            .then(res => res.json())
+            .then(result => displayResults(result));
+        });
+
+        function getSelectedAnswers() {
+            const answers = [];
+            const questionElements = document.querySelectorAll('.question');
+
+            questionElements.forEach(questionEl => {
+                const selectedOption = questionEl.querySelector('input[type="radio"]:checked');
+                answers.push(selectedOption ? parseInt(selectedOption.value, 10) : null); 
+            });
+
+            return answers;
+        }
+
+        function displayResults(result) {
+            resultsContainer.innerHTML = `
+                <h2>Results</h2>
+                <p>Your Score: ${result.score} / ${questions.length}</p>
+                <ul>
+                    ${result.feedback.map(item => `
+                        <li>
+                            <strong>${item.question}</strong>
+                            ${item.result === 'correct' ? 
+                                '<span style="color:green;">Correct!</span>' : 
+                                `<span style="color:red;">Incorrect.</span> Correct Answer: ${item.correctAnswer}`}
+                        </li> 
+                    `).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
