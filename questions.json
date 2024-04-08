@@ -1,0 +1,48 @@
+[
+    {
+        "text": "What is the event loop in Node.js?",
+        "options": [
+            "A synchronous loop that processes events",
+            "A construct for handling asynchronous operations",
+            "A method for handling HTTP requests",
+            "None of the above"
+        ],
+        "answer": 1
+    }
+,
+    {
+        "text": "Promises in JavaScript are used to...",
+        "options": [
+            "Handle synchronous operations",
+            "Manage asynchronous operations",
+            "Perform background tasks",
+            "Loop through arrays"
+        ],
+        "answer": 1 
+    }
+    ,
+    {
+        "text": "Which keyword is used to export variables, functions, and classes in Node.js modules?",
+        "options": [
+            "import",
+            "require",
+            "export",
+            "module"
+        ],
+        "answer": 2 
+    }
+    ,
+    {
+        "text": "What's the most common use for the 'fetch' function in Node.js?",
+        "options": [
+            "Making HTTP requests to external APIs",
+            "Importing modules",
+            "Reading and writing files",
+            "Handling events"
+        ],
+        "answer": 1
+    }
+            
+
+    
+]
